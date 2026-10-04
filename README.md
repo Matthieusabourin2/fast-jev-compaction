@@ -86,7 +86,23 @@ Les règles de résumé sont dans `handoverInstructions`, dans [`src/v2.ts`](src
 ### Prérequis
 
 - Claude Code avec les function hooks (accès anticipé). Tout a été mesuré sur la version 2.1.286.
-- Une clé API TypeSafe pour Jev.
+- Une clé API TypeSafe pour Jev (voir ci-dessous).
+
+### Obtenir une clé Jev
+
+1. Connectez-vous à la [console TypeSafe](https://console.typesafe.ai/), avec Google ou un code reçu par e-mail.
+2. Ouvrez la page [API Keys](https://console.typesafe.ai/keys), créez une clé et copiez-la tout de suite.
+3. Vérifiez-la dans un terminal :
+
+   ```bash
+   curl -s https://api.typesafe.ai/v1/models -H "Authorization: Bearer $TYPESAFE_API_KEY"
+   ```
+
+   La réponse liste les modèles. Le plugin utilise `jev-1.13.0`.
+
+Prix public : 0,042 $ par million de tokens envoyés, d'après la [page d'accueil de TypeSafe](https://typesafe.ai). Un passage de nettoyage envoie quelques dizaines de milliers de tokens.
+
+Les inscriptions ont changé plusieurs fois depuis le lancement : ouvertes à tous le 21 septembre 2026, mises en pause le lendemain faute de capacité, toujours en pause fin septembre. Si la console ne vous propose pas de créer un compte, écrivez à hello@typesafe.ai. L'accès à Jev par la passerelle IA de Vercel ne fonctionne pas avec ce plugin, qui appelle directement l'API de TypeSafe. Documentation officielle : [démarrage rapide](https://docs.typesafe.ai/introduction/quickstart).
 
 ### Installer
 
