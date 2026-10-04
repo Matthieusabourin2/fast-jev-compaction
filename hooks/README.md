@@ -1,5 +1,7 @@
 # fast-jev-compaction Claude Code mod
 
+> This page describes the Jev pass itself, inherited from the original project. How passes, refusals and the final summary fit together in this fork is in the main [README](../README.md).
+
 This plugin uses Claude Code function hooks to replace a compaction with the
 original messages, minus the tool calls and tool results Jev judged no longer
 needed. `hooks/fast-jev.ts` is a thin adapter: it reads the plugin options,
@@ -31,8 +33,8 @@ hooks surface before installing or loading it:
 export CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1
 export TYPESAFE_API_KEY="<your TypeSafe key>"
 
-claude plugin marketplace add tamaratran/fast-jev-compaction
-claude plugin install fast-jev-compaction@fast-jev-compaction
+claude plugin marketplace add Matthieusabourin2/fast-jev-compaction
+claude plugin install fast-jev-compaction@jev-compaction
 ```
 
 For local development:
@@ -50,12 +52,16 @@ The plugin declares these `userConfig` values in
 | --- | ---: |
 | `keepThreshold` | `0.5` |
 | `preserveRecentMessages` | `6` |
-| `compactAtPercent` | `60` |
+| `compactAtPercent` | `0` |
 | `minReductionRatio` | `0.25` |
 | `maxStateTokens` | `25000` |
 | `maxRequestTokens` | `30000` |
 | `truncateHeadChars` | `300` |
-| `model` | `jev-latest` |
+| `model` | `jev-1.13.0` |
+| `summarizeAtPercent` | `60` |
+| `hardCapPercent` | `85` |
+| `passGrowthTokens` | `100000` |
+| `handoverAbove` | `0.7` |
 
 The TypeSafe key can be supplied as the sensitive `apiKey` plugin option or
 through `TYPESAFE_API_KEY`. The environment variable is the recommended

@@ -1,0 +1,1 @@
+{ "name": "compaction-probe", "version": "0.1.0", "description": "Diagnostic: logs events, session.compact in/out, API-form context and usage to .probe/ in a labo folder." }

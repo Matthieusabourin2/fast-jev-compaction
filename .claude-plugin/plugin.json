@@ -1,7 +1,7 @@
 {
   "name": "fast-jev-compaction",
-  "version": "0.3.0",
-  "description": "Verbatim Jev-guided compaction for Claude Code sessions.",
+  "version": "0.7.1",
+  "description": "Jev cleans the context by removal only, from Claude Code's auto-compact trigger (set CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=30) up to summarizeAtPercent, refusing compactions in between. At summarizeAtPercent it cleans once more and Claude summarizes the cleaned history with fixed rules: user messages and standing instructions word for word, exact facts with replaced values, open items.",
   "license": "MIT",
   "userConfig": {
     "apiKey": {
@@ -25,8 +25,8 @@
     "compactAtPercent": {
       "type": "number",
       "title": "Compaction percentage",
-      "description": "Context percentage at which turn.complete requests compaction.",
-      "default": 60
+      "description": "Context percentage at which turn.complete asks for a compaction; 0 (default) leaves the trigger to Claude Code.",
+      "default": 0
     },
     "minReductionRatio": {
       "type": "number",
@@ -56,7 +56,31 @@
       "type": "string",
       "title": "Jev model",
       "description": "TypeSafe Jev model name.",
-      "default": "jev-latest"
+      "default": "jev-1.13.0"
+    },
+    "handoverAbove": {
+      "type": "number",
+      "title": "Protected turn budget",
+      "description": "Share of the auto-compact threshold that bounds the turn in progress protected from a pass (half of what is left under it).",
+      "default": 0.7
+    },
+    "summarizeAtPercent": {
+      "type": "number",
+      "title": "Summarize at (% of window)",
+      "description": "Context share at which Jev cleans one last time and Claude Code summarizes the cleaned history. Below it and above the auto-compact trigger, Jev only removes.",
+      "default": 60
+    },
+    "hardCapPercent": {
+      "type": "number",
+      "title": "Hard cap (% of window)",
+      "description": "Above this share a compaction is never refused (Claude Code also compacts automatically when a prompt is too long).",
+      "default": 85
+    },
+    "passGrowthTokens": {
+      "type": "number",
+      "title": "Growth between passes (tokens)",
+      "description": "A new Jev pass only once the context has grown this much since the previous one; compactions in between are refused (one 'not compacted' notice each).",
+      "default": 100000
     }
   }
 }

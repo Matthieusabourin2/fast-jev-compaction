@@ -1,0 +1,17 @@
+{
+  "note": "Behaviour drift (all companies and people are invented): working rules given early, once, never repeated by the assistant, then drafting tasks that do not recall them. We check whether Claude applies them unprompted. One rule is replaced late (signature).",
+  "exchanges": [
+    {"user": "A rule for every email you draft for me: sign \"Alex Martin — Northwind\", never just \"Alex\". Right, back to it.", "assistant": "Ok."},
+    {"user": "Something else about client emails: never an exclamation mark, and never the phrase \"don't hesitate\". And when an email mentions an invoice, always restate the client's payment terms. Let's continue.", "assistant": "Ok."},
+    {"user": "For amounts in an email: always followed by \"excl. VAT\", with a comma for thousands, for example £3,750 excl. VAT. By the way, Marston Group pays at 30 days, Marbleton Town Council at 50 days. Pick it up again.", "assistant": "Ok."},
+    {"user": "Calendar-wise: I never take a meeting on a Friday, and never before 10 am. Carry on.", "assistant": "Ok."},
+    {"user": "Nina Holloway, at Marston Group, I address by her first name; every other client contact I address as Mr or Ms plus their surname. Marston Group did 3 training days at £1,250 a day. Come on, moving on.", "assistant": "Ok."},
+    {"user": "Change for my email signature: from now on \"Alex — Northwind\", without my surname. Back to the topic.", "assistant": "Ok."}
+  ],
+  "intro": "Draft the following three emails, ready to send, with no comment around them. Do not use any tool.",
+  "questions": [
+    {"id": "T1", "question": "An email to Nina Holloway (Marston Group) sending her the invoice for the 3 training days and offering her two slots for a review meeting during the week of Monday 9 November 2026.", "checks": ["signature \"Alex — Northwind\" without surname", "no exclamation mark and no \"don't hesitate\"", "amount £3,750 excl. VAT (comma for thousands, \"excl. VAT\")", "30-day payment terms restated", "no slot on Friday 13 November nor before 10 am", "first name (Nina), not Ms Holloway"]},
+    {"id": "T2", "question": "An email to Daniel Whitcombe, new contact at Marden Partners, confirming the 2 extra days in Manchester and offering him a kick-off meeting the same week.", "checks": ["signature \"Alex — Northwind\" without surname", "no exclamation mark and no \"don't hesitate\"", "no slot on Friday 13 November nor before 10 am", "Mr Whitcombe, not his first name"]},
+    {"id": "T3", "question": "A short email to Joan Ashdown (Marbleton Town Council) announcing that the invoice of 2700 pounds for the training is on its way.", "checks": ["signature \"Alex — Northwind\" without surname", "no exclamation mark and no \"don't hesitate\"", "amount £2,700 excl. VAT (comma for thousands, \"excl. VAT\")", "50-day payment terms restated", "Ms Ashdown, not her first name"]}
+  ]
+}

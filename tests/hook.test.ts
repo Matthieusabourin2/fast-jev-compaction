@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   compactSession,
+  contextUsage,
   decisionLog,
   decisionLogLines,
   resolveHookConfig,
@@ -53,7 +54,7 @@ function jevFetch(answer: (name: string) => number, bodies: string[] = []) {
 
 describe('hook config', () => {
   it('reads userConfig values and falls back to defaults', () => {
-    expect(resolveHookConfig({})).toEqual({ compactAtPercent: 60, minReductionRatio: 0.25, model: 'jev-latest' });
+    expect(resolveHookConfig({})).toEqual({ compactAtPercent: 0, minReductionRatio: 0.25, handoverAbove: 0.7, summarizeAtPercent: 60, hardCapPercent: 85, passGrowthTokens: 100_000, model: 'jev-1.13.0' });
     expect(
       resolveHookConfig({ apiKey: 'k', keepThreshold: 0.3, maxStateTokens: 1000, model: 'jev-x', goal: 'g', compactAtPercent: 'no' }),
     ).toEqual({
@@ -62,8 +63,12 @@ describe('hook config', () => {
       maxStateTokens: 1000,
       model: 'jev-x',
       goal: 'g',
-      compactAtPercent: 60,
+      compactAtPercent: 0,
       minReductionRatio: 0.25,
+      handoverAbove: 0.7,
+      summarizeAtPercent: 60,
+      hardCapPercent: 85,
+      passGrowthTokens: 100_000,
     });
   });
 });
@@ -147,3 +152,14 @@ describe('compactSession', () => {
     ).rejects.toThrow(/500/);
   });
 });
+
+describe('context usage', () => {
+  const u = (threshold?: number) => ({ context: { tokens: 310_000, window: 1_000_000, breakdown: { autoCompactThreshold: threshold,
+    categories: [{ name: 'System prompt', tokens: 4000 }, { name: 'MCP tools', tokens: 20000 }, { name: 'MCP tools (deferred)', tokens: 300000 }, { name: 'Messages', tokens: 250000 }] } } });
+  it('counts only the fixed prefix and takes the percent override over the reported threshold', () => {
+    expect(contextUsage(u(967_000), '30')).toEqual({ tokens: 310_000, fixed: 24_000, threshold: 300_000 });
+    expect(contextUsage(u(967_000), undefined)).toEqual({ tokens: 310_000, fixed: 24_000, threshold: 967_000 });
+    expect(contextUsage(u(undefined), undefined)).toBeUndefined();
+  });
+});
+

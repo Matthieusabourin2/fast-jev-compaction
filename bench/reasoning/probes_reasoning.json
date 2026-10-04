@@ -1,0 +1,29 @@
+{
+  "note": "Fictitious probe thread (all companies and people are invented). Six clients with close names, general rules stated early and applied without reminder, information replaced late, totals over several clients, facts stated once (the assistant never repeats them). The last request (intro) arrives with the questions, like a task in progress.",
+  "exchanges": [
+    {"user": "Before I forget, my billing rules for training, valid for every client: a public-sector client is never re-invoiced for travel costs; for private clients, travel outside Greater London is re-invoiced at cost but capped at £400 per day concerned, with 20% VAT on the re-invoiced amount; a day delivered remotely is billed at 70% of the day rate; above 5 days ordered, we give a 10% discount on all the days. Right, back to what we were doing.", "assistant": "Ok."},
+    {"user": "On the sales side, Marlow Studio has signed: 3 days at their London offices at £1,150 a day. Marden Partners too: 4 days in Manchester at £1,100 a day, and they pay at 45 days end of month (add 45 days to the invoice date, then go to the end of that month). Carry on.", "assistant": "Ok."},
+    {"user": "Marston Group takes 2 days in London at £1,250, billing contact Owen Pryce. And Marley House goes for 5 days at £990. Pick up where you were.", "assistant": "Ok."},
+    {"user": "Two new ones: Marbury Homes, a private limited company, 2 days in Leeds at £1,050; and Marbleton Town Council, 3 days on site in Marbleton at £900. Let's continue.", "assistant": "Ok."},
+    {"user": "Marden adds 2 days, still in Manchester. Anyway, back to the topic.", "assistant": "Ok."},
+    {"user": "At Marston, Owen Pryce has left; invoices now go to Nina Holloway. And Marley wants its 4th day delivered remotely. Moving on.", "assistant": "Ok."},
+    {"user": "Correction on Marbury Homes: it is not a private company, it is a public housing authority. Come on, let's go on.", "assistant": "Ok."},
+    {"user": "One last thing on training: we renegotiated with Marlow Studio, it is now £1,200 a day, still for 3 days. Let's get back to it.", "assistant": "Ok."}
+  ],
+  "intro": "I'm preparing this quarter's training invoices. Actual costs I incurred: for each day in Manchester, £230 of train and £190 of hotel; for Leeds, £140 of train and £110 of hotel per day. Do not use any tool and do not look anything up: answer only with what you know of our conversation so far. For each point, give the result and, in one sentence, the facts and the calculation that justify it. If a piece of information is missing, say exactly \"I don't know\" for that point. Do not guess.",
+  "questions": [
+    {"id": "R00", "question": "To check that you have the whole thread: quote the beginning of the last message I sent you before this one.", "expected_answer": "(integrity check, judged separately)", "type": "integrity"},
+    {"id": "R01", "question": "Give the amount excluding VAT to invoice Marden for the training days.", "expected_answer": "6 days x £1,100 = £6,600, 10% discount (more than 5 days): £5,940 excl. VAT.", "type": "implicit_rule"},
+    {"id": "R02", "question": "How much should I re-invoice Marden for travel, excluding VAT?", "expected_answer": "6 days x (230 + 190 = £420, capped at £400) = £2,400 excl. VAT.", "type": "implicit_rule"},
+    {"id": "R03", "question": "And the Leeds travel, how much should I re-invoice?", "expected_answer": "£0: Marbury Homes is a public housing authority (public-sector client), so no costs are re-invoiced.", "type": "replaced"},
+    {"id": "R04", "question": "Amount excluding VAT for Marley House's days?", "expected_answer": "4 x 990 + 0.7 x 990 = 3,960 + 693 = £4,653 excl. VAT (no discount: only 5 days).", "type": "implicit_rule"},
+    {"id": "R05", "question": "Who do I send the Marston Group invoice to?", "expected_answer": "Nina Holloway (Owen Pryce has left).", "type": "replaced"},
+    {"id": "R06", "question": "Total excluding VAT of the days invoiced to public-sector clients this quarter?", "expected_answer": "Marbury Homes 2 x 1,050 = £2,100 + Marbleton Town Council 3 x 900 = £2,700 = £4,800 excl. VAT.", "type": "aggregation"},
+    {"id": "R07", "question": "Amount excluding VAT of the days for Marlow Studio?", "expected_answer": "3 x £1,200 = £3,600 excl. VAT (renegotiated rate).", "type": "replaced"},
+    {"id": "R08", "question": "Which clients get a discount on their days?", "expected_answer": "Only Marden Partners (6 days); Marley has 5 days, not more than 5.", "type": "aggregation"},
+    {"id": "R09", "question": "Marston has just ordered 3 more days, one of them in Bristol (train £180, hotel £260). Total amount excluding VAT of this order, costs included?", "expected_answer": "3 x 1,250 = £3,750 + Bristol costs £440 capped at £400 = £4,150 excl. VAT (no discount).", "type": "implicit_rule"},
+    {"id": "R10", "question": "If the Marden invoice goes out on 10 November, when is payment due?", "expected_answer": "10 November + 45 days = 25 December, then end of month: 31 December.", "type": "implicit_rule"},
+    {"id": "R11", "question": "How much VAT on the re-invoiced travel for Marden?", "expected_answer": "2,400 x 20% = £480.", "type": "implicit_rule"},
+    {"id": "R12", "question": "Total excluding VAT of the training days, all clients together, this quarter?", "expected_answer": "Marlow 3,600 + Marden 5,940 + Marston 2,500 + Marley 4,653 + Marbury 2,100 + Marbleton 2,700 = £21,493 excl. VAT (excluding the new Marston order).", "type": "aggregation"}
+  ]
+}

@@ -1,0 +1,9 @@
+Write the summary with exactly the sections below, in this order, instead of your usual structure. Each section must be complete; the reader will have nothing else.
+1. Goal: what the user is trying to achieve in this session, in two or three sentences.
+2. All user messages: every message the user sent, in order, quoted word for word (long pastes may be cut after their first lines, marked "[…]"), including messages typed while you were working and answers to questions. Do not merge or paraphrase them.
+3. Standing instructions: every instruction, constraint, rule and preference still in force, quoted word for word. When a later instruction replaced an earlier one, give only the current one and say what it replaced.
+4. Exact facts: every figure, amount, date, identifier, reference, name, email address, file path, URL, command and setting that may still matter, copied exactly as written: no rounding, no paraphrase. Give the current value; when a value changed, give the current one and the one it replaced. Group them by topic.
+5. Decisions: each decision taken, with what was chosen, what was ruled out, why, and who decided. Mark decisions later reversed.
+6. Work done: files created or modified (path and what changed), tests run and their results, errors met and how they were fixed.
+7. Open items: unanswered questions, pending tasks, and the exact next step.
+When unsure whether a detail still matters, keep it.

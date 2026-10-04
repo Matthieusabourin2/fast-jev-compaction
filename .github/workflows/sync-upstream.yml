@@ -1,0 +1,55 @@
+name: Sync upstream
+
+# Every Monday, merge tamaratran/fast-jev-compaction into a branch, run the
+# tests, and open a pull request. A conflict opens an issue instead.
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Merge upstream and open a pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git remote add upstream https://github.com/tamaratran/fast-jev-compaction.git
+          git fetch upstream main
+          if git merge-base --is-ancestor upstream/main HEAD; then
+            echo "Already up to date with upstream."
+            exit 0
+          fi
+          sha=$(git rev-parse --short upstream/main)
+          branch="sync/upstream-$sha"
+          if git ls-remote --exit-code --heads origin "$branch" >/dev/null; then
+            echo "Branch $branch already exists."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          if ! git merge --no-edit upstream/main; then
+            git merge --abort
+            title="Upstream sync needs a manual merge ($sha)"
+            if ! gh issue list --state open --search "$title in:title" --json number --jq '.[0].number' | grep -q .; then
+              gh issue create --title "$title" --body "Merging tamaratran/fast-jev-compaction@$sha into main conflicts. Merge it by hand: \`git fetch upstream && git merge upstream/main\`."
+            fi
+            exit 0
+          fi
+          if npm ci && npm run typecheck && npm test; then result="Tests and typecheck pass."; else result="**Tests or typecheck fail: check before merging.**"; fi
+          git push origin "$branch"
+          gh pr create --base main --head "$branch" --title "Sync upstream ($sha)" \
+            --body "Merges the latest tamaratran/fast-jev-compaction main. $result After merging, bump \`version\` in \`.claude-plugin/plugin.json\` and \`marketplace.json\` so installed copies update."

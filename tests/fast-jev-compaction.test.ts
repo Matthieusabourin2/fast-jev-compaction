@@ -379,13 +379,12 @@ describe('compact', () => {
     expect(reductionRatio(output)).toBe(0);
   });
 
-  it('rejects malformed answers', async () => {
-    const broken: JevAsker = {
+  it('keeps an item whose answer is missing instead of failing the compaction', async () => {
+    const partial: JevAsker = {
       ask: async () => ({ answers: { call_t1: { noul: 0.5 } } }),
     };
-    await expect(compact(transcript(), broken, { preserveRecentMessages: 1 })).rejects.toThrow(
-      /Invalid Jev answer/,
-    );
+    const r = await compact(transcript(), partial, { preserveRecentMessages: 1 });
+    expect(r.stats.callsDropped).toBe(0);
   });
 });
 
@@ -397,7 +396,7 @@ describe('HTTP client', () => {
     expect(request.url).toBe('https://api.typesafe.ai/v1/systemone');
     expect(request.headers.authorization).toBe('Bearer k');
     expect(JSON.parse(request.body)).toEqual({
-      model: 'jev-latest',
+      model: 'jev-1.13.0',
       state: { a: 1 },
       questions: { q: { type: 'noul', instructions: 'x' } },
     });
